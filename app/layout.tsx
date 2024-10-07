@@ -2,21 +2,31 @@ import React from 'react';
 
 export default function RootLayout({
   children,
+  analytics,
+  team,
 }: {
   children: React.ReactNode;
+  analytics: React.ReactNode;
+  team: React.ReactNode;
 }) {
   return (
-    <html lang='en'>
+    <html>
+      <head>
+        <title>병렬 라우트 기본 레이아웃</title>
+      </head>
       <body>
-        <header>
-          <nav>
-            <a href='/about'>About</a>
-            <a href='/blog'>Blog</a>
-            <a href='/account'>Account</a>
-          </nav>
-        </header>
-        <main>{children}</main>
-        <footer>푸터입니다</footer>
+        <div>
+          <h1>Main</h1>
+          {children}
+        </div>
+        <div>
+          <h1>Team</h1>
+          {team}
+        </div>
+        <div>
+          <h1>Analytics</h1>
+          {analytics}
+        </div>
       </body>
     </html>
   );
