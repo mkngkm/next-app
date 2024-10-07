@@ -1,12 +1,4 @@
-async function getTodos() {
-  const res = await fetch('https://jsonplaceholder.typicode.com/todos');
-
-  if (!res.ok) {
-    throw new Error('Failed to fetch todos');
-  }
-
-  return res.json();
-}
+import { getTodos } from '../lib/getTodos';
 
 export default async function TodosPage() {
   const todos = await getTodos();

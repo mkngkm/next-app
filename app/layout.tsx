@@ -1,3 +1,10 @@
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: '정적인 메타데이터',
+  description: '정적인 설명',
+};
+
 export default function RootLayout({
   children,
 }: {

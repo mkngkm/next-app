@@ -1,16 +1,26 @@
-async function getTodo(id: string) {
-  try {
-    const res = await fetch(`https://jsonplaceholder.typicode.com/todos/${id}`);
+import { Metadata } from 'next';
+import { getTodo } from '../../lib/getTodos';
 
-    if (!res.ok) {
-      throw new Error('Failed to fetch the Todo');
-    }
+export async function generateMetadata({
+  params,
+}: {
+  params: { todo: string };
+}): Promise<Metadata> {
+  const todoData = await getTodo(params.todo);
 
-    return await res.json();
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    return null;
+  // Debug logs for todoId and todo data
+  console.log('Todo ID:', params.todo);
+  console.log('Fetched Todo:', todoData);
+
+  if (!todoData) {
+    return {
+      title: 'Todo not found',
+    };
   }
+
+  return {
+    title: `ToDo - ${todoData.title}`,
+  };
 }
 
 export default async function TodoDetail({
@@ -18,17 +28,17 @@ export default async function TodoDetail({
 }: {
   params: { todo: string };
 }) {
-  const todo = await getTodo(params.todo);
+  const todoData = await getTodo(params.todo); // Fetch specific todo data
 
-  if (!todo) {
-    return <div>Todo not found</div>;
+  if (!todoData) {
+    return <div>Todo not found</div>; // Display when data is not fetched
   }
 
   return (
     <div>
       <h1>Todo Detail</h1>
-      <p>Title: {todo.title}</p>
-      <p>Completed: {todo.completed ? 'Yes' : 'No'}</p>
+      <p>Title: {todoData.title}</p>
+      <p>Completed: {todoData.completed ? 'Yes' : 'No'}</p>
     </div>
   );
 }
