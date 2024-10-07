@@ -9,22 +9,26 @@ export default function RootLayout({
   analytics: React.ReactNode;
   team: React.ReactNode;
 }) {
-  return (
+  const didLogin = true;
+  return didLogin ? (
     <html>
-      <head>
-        <title>병렬 라우트 기본 레이아웃</title>
-      </head>
       <body>
-        <div>
-          <h1>Main</h1>
-          {children}
-        </div>
+        <div>{children}</div>
         <div>
           <h1>Team</h1>
           {team}
         </div>
         <div>
           <h1>Analytics</h1>
+          {analytics}
+        </div>
+      </body>
+    </html>
+  ) : (
+    <html>
+      <body>
+        <div>
+          <h1>Login화면</h1>
           {analytics}
         </div>
       </body>
