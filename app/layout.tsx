@@ -1,36 +1,18 @@
-import React from 'react';
-
 export default function RootLayout({
   children,
-  analytics,
-  team,
 }: {
   children: React.ReactNode;
-  analytics: React.ReactNode;
-  team: React.ReactNode;
 }) {
-  const didLogin = true;
-  return didLogin ? (
-    <html>
+  return (
+    <html lang='en'>
+      <head>
+        <title>Todo App</title>
+      </head>
       <body>
-        <div>{children}</div>
-        <div>
-          <h1>Team</h1>
-          {team}
-        </div>
-        <div>
-          <h1>Analytics</h1>
-          {analytics}
-        </div>
-      </body>
-    </html>
-  ) : (
-    <html>
-      <body>
-        <div>
-          <h1>Login화면</h1>
-          {analytics}
-        </div>
+        <header>
+          <h1>My Todo App</h1>
+        </header>
+        <main>{children}</main>
       </body>
     </html>
   );
