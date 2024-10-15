@@ -42,6 +42,9 @@ export default function RecipeDetail({
     const newTimers = [...timers];
     newTimers[index] = 0; // 타이머 종료
     setTimers(newTimers);
+
+    // 타이머 완료 알림
+    alert('완료되었습니다!'); // Alert when the timer finishes
   };
 
   // 타이머 시작 핸들러
@@ -66,35 +69,43 @@ export default function RecipeDetail({
   };
 
   return (
-    <div>
+    <div className='max-w-2xl mx-auto p-6 bg-white rounded-lg'>
       {recipe ? (
         <>
-          <h2>{recipe.current.title}</h2>
-          <div>
-            <h3>재료:</h3>
-            <ul>
+          <h1 className='text-3xl font-bold text-center mb-4'>
+            {recipe.current.title}
+          </h1>
+          <div className='mb-6'>
+            <h3 className='text-xl font-semibold mb-2'>재료</h3>
+            <ul className='list-disc ml-6'>
               {recipe.current.ingredients.map((ingredient, index) => (
                 <li key={index}>{ingredient}</li>
               ))}
             </ul>
           </div>
-          <div>
-            <h3>조리 방법:</h3>
+          <div className='mb-6'>
+            <h3 className='text-xl font-semibold mb-2'>조리 방법</h3>
             {recipe.current.instructions.map((instruction, index) => (
-              <div key={index}>
-                <p>{instruction}</p>
-                <input
-                  type='number'
-                  placeholder='초 단위의 시간 입력'
-                  onChange={(e) => {
-                    const newDurations = [...timerDurations];
-                    newDurations[index] = Number(e.target.value);
-                    setTimerDurations(newDurations);
-                  }}
-                />
-                <button onClick={() => handleStartTimer(index)}>
-                  타이머 시작
-                </button>
+              <div key={index} className='mb-4'>
+                <p>{`Step ${index + 1}: ${instruction}`}</p>
+                <div className='flex items-center'>
+                  <input
+                    type='number'
+                    placeholder='초 단위의 시간 입력'
+                    className='border border-gray-300 p-1 rounded w-24 mr-2'
+                    onChange={(e) => {
+                      const newDurations = [...timerDurations];
+                      newDurations[index] = Number(e.target.value);
+                      setTimerDurations(newDurations);
+                    }}
+                  />
+                  <button
+                    className='bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 transition'
+                    onClick={() => handleStartTimer(index)}
+                  >
+                    타이머 시작
+                  </button>
+                </div>
                 {timers[index] > 0 && (
                   <CookingTimer
                     duration={timers[index]}
@@ -106,12 +117,15 @@ export default function RecipeDetail({
           </div>
 
           {/* 태그 표시 */}
-          <div>
-            <h3>태그:</h3>
+          <div className='mb-6'>
+            <h3 className='text-xl font-semibold mb-2'>태그</h3>
             <div>
               {recipe.current.tags && recipe.current.tags.length > 0 ? (
                 recipe.current.tags.map((tag, index) => (
-                  <span key={index} style={{ marginRight: '8px' }}>
+                  <span
+                    key={index}
+                    className='bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-sm mr-2'
+                  >
                     #{tag}
                   </span>
                 ))

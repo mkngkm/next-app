@@ -88,12 +88,13 @@ export const updateRecipe = (updatedRecipe: Recipe, email: string) => {
 
   // 새 버전 정보 생성 (기존 레시피의 current 상태를 새로운 버전으로 저장)
   const newVersion: RecipeVersion = {
-    version: existingRecipe.current.version + 1, // 기존 현재 버전 번호 사용 //여기 어캄?
+    version: existingRecipe.current.version + 1, // 기존 현재 버전 번호 사용
     title: existingRecipe.current.title, // 기존 레시피 정보 복사
     ingredients: existingRecipe.current.ingredients,
     instructions: existingRecipe.current.instructions,
-    timestamp: existingRecipe.current.timestamp, // 기존 타임스탬프
+    timestamp: new Date().toISOString(), // 새로운 타임스탬프
     id: existingRecipe.id,
+    tags: existingRecipe.current.tags, // 기존 태그 복사
   };
 
   // 이전 버전을 `versions` 배열에 추가
@@ -103,7 +104,10 @@ export const updateRecipe = (updatedRecipe: Recipe, email: string) => {
   // 새롭게 업데이트된 레시피 정보로 교체
   const updatedRecipeWithVersions: Recipe = {
     ...updatedRecipe, // 업데이트된 레시피 정보로 덮어쓰기
-    current: updatedRecipe.current, // 업데이트된 현재 레시피
+    current: {
+      ...updatedRecipe.current,
+      tags: updatedRecipe.current.tags || [], // 업데이트된 태그 포함
+    }, // 업데이트된 현재 레시피
     versions: updatedVersions, // 업데이트된 버전 목록
   };
 

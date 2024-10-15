@@ -28,14 +28,28 @@ export default function RecipePage({ params }: { params: { id: string } }) {
   };
 
   return (
-    <div>
+    <div className='max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg mt-10'>
       <RecipeDetail recipeId={id} userEmail={userEmail} />{' '}
       {/* 레시피 ID와 사용자 이메일을 props로 전달 */}
-      {/* 버튼 추가 */}
-      <div>
-        <button onClick={() => router.push(`/recipe/edit/${id}`)}>수정</button>
-        <button onClick={handleDeleteRecipe}>삭제</button>
-        <button onClick={() => router.push('/recipe')}>목록으로</button>
+      <div className='flex space-x-4 p-6 '>
+        <button
+          onClick={() => router.push(`/recipe/edit/${id}`)}
+          className='bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition'
+        >
+          수정
+        </button>
+        <button
+          onClick={handleDeleteRecipe}
+          className=' text-green-500 border border-green-500  bg-white px-4 py-2 rounded  transition'
+        >
+          삭제
+        </button>
+        <button
+          onClick={() => router.push('/recipe')}
+          className='bg-gray-400 px-4 py-2 rounded hover:bg-gray-600 text-white transition'
+        >
+          목록으로
+        </button>
       </div>
     </div>
   );

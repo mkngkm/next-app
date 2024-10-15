@@ -37,23 +37,17 @@ export default function RecipePage() {
   }
 
   return (
-    <div>
-      <h2>레시피 목록</h2>
+    <div className='max-w-lg mx-auto bg-green-100 shadow-md rounded-lg p-6 mt-10'>
+      <h2 className='text-2xl font-bold text-center mb-4 '>레시피 목록</h2>
       {recipes.length > 0 ? (
-        <ul>
+        <ul className='space-y-3 '>
           {recipes.map((recipe) => (
             <RecipeItem key={recipe.current.id} recipe={recipe} /> // RecipeItem 컴포넌트 사용
           ))}
         </ul>
       ) : (
-        <div>레시피가 없습니다.</div>
+        <div className='text-center text-gray-500'>레시피가 없습니다.</div>
       )}
-      {/* 레시피 추가 링크 */}
-      <div>
-        <Link href='/recipe/add' className='btn btn-primary'>
-          레시피 추가
-        </Link>
-      </div>
     </div>
   );
 }

@@ -1,8 +1,12 @@
-import { Metadata } from 'next';
+// app/layout.tsx
+import ClientLayout from './client-layout'; // Import ClientLayout
+import { Metadata } from 'next'; // Import Metadata
+import './globals.css';
 
+// Define metadata
 export const metadata: Metadata = {
-  title: '정적인 메타데이터',
-  description: '정적인 설명',
+  title: 'Recipe', // Set the title here
+  description: 'A collection of your favorite recipes', // Optional: add a description
 };
 
 export default function RootLayout({
@@ -11,15 +15,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang='en'>
+    <html lang='kr'>
       <head>
-        <title>Recipe</title>
+        <title>Recipe</title> {/* Use metadata title */}
       </head>
-      <body>
-        <header>
-          <h1>Recipe</h1>
-        </header>
-        <main>{children}</main>
+      <body className='bg-gray-100'>
+        <ClientLayout>{children}</ClientLayout> {/* Use ClientLayout */}
       </body>
     </html>
   );

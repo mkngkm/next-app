@@ -38,19 +38,20 @@ export default function EditRecipe({ params }: EditRecipeParams) {
   const handleSave = (
     title: string,
     ingredients: string[],
-    instructions: string[]
+    instructions: string[],
+    tags: string[] // Include tags in the save function
   ) => {
     if (recipe && session?.user?.email) {
       const updatedCurrent: RecipeDetails = {
         id: recipe.current.id,
         title,
-        ingredients, // 배열 형태로 저장
-        instructions, // 배열 형태로 저장
+        ingredients,
+        instructions,
+        tags, // Include tags when updating
         version: recipe.current.version + 1,
         timestamp: new Date().toISOString(),
       };
 
-      // 레시피 업데이트
       updateRecipe({ ...recipe, current: updatedCurrent }, session.user.email);
       router.push('/recipe');
     }
@@ -60,7 +61,7 @@ export default function EditRecipe({ params }: EditRecipeParams) {
     if (recipe && session?.user?.email) {
       restorePreviousVersion(id, version, session.user.email);
 
-      // 복원 후 레시피 다시 로드
+      // Reload the recipe after restoration
       const restoredRecipe = getRecipeById(id, session.user.email);
       if (restoredRecipe) {
         setRecipe(restoredRecipe);
@@ -74,28 +75,16 @@ export default function EditRecipe({ params }: EditRecipeParams) {
   if (!recipe) return <div>레시피를 불러오는 중...</div>;
 
   return (
-    <div>
-      <h1>레시피 수정</h1>
+    <div className='max-w-lg mx-auto bg-white shadow-md rounded-lg p-6 mt-10'>
+      <h1 className='text-2xl font-bold text-center mb-4'>레시피 수정</h1>
       <RecipeForm
         initialTitle={recipe.current.title}
-        initialIngredients={recipe.current.ingredients} // 배열 그대로 전달
-        initialInstructions={recipe.current.instructions} // 배열 그대로 전달
+        initialIngredients={recipe.current.ingredients} // Pass ingredients array
+        initialInstructions={recipe.current.instructions} // Pass instructions array
+        initialTags={recipe.current.tags} // Pass tags array for editing
         onSubmit={handleSave}
-        showTags={false} // 태그 입력 필드 숨김
+        showTags={true} // Show the tag input field
       />
-
-      <h2>버전 관리</h2>
-      {versions.map((version, idx) => (
-        <div key={idx}>
-          <p>
-            버전 {version.version}:{' '}
-            {new Date(version.timestamp).toLocaleString()}
-          </p>
-          <button onClick={() => handleRestore(version.version)}>
-            이 버전으로 복원
-          </button>
-        </div>
-      ))}
     </div>
   );
 }

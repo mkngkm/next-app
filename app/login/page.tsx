@@ -1,45 +1,95 @@
-// app/login/page.tsx
 'use client';
 
 import { signIn, useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+// Import images from the public folder
+import githubLogo from '../../public/github-logo.png';
+import googleLogo from '../../public/google-logo.png';
+
 const LoginPage = () => {
-  const { data: session } = useSession(); // 세션 정보 가져오기
+  const { data: session } = useSession();
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isMounted, setIsMounted] = useState(false); // 클라이언트에서만 렌더링을 위한 상태
+  const [isMounted, setIsMounted] = useState(false);
+  const [user, setUser] = useState<{
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+  } | null>(null);
 
   useEffect(() => {
-    setIsMounted(true); // 컴포넌트가 마운트되면 상태 업데이트
-  }, []);
+    setIsMounted(true);
+    const storedUser = localStorage.getItem(`user_${email}`);
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+      const userData = JSON.parse(storedUser);
+      if (userData.email && userData.password) {
+        handleLoginWithCredentials(userData.email, userData.password);
+      }
+    }
+  }, [email]);
 
   useEffect(() => {
-    if (session) {
-      // 세션이 있을 경우 로컬 스토리지에 저장
-      localStorage.setItem('user', JSON.stringify(session.user));
+    if (session && session.user) {
+      localStorage.setItem(
+        `user_${session.user.email}`,
+        JSON.stringify({
+          email: session.user.email,
+          name: session.user.name,
+          image: session.user.image,
+        })
+      );
+      setUser(session.user);
     }
   }, [session]);
+
+  const handleLoginWithCredentials = async (
+    email: string,
+    password: string
+  ) => {
+    const result = await signIn('credentials', {
+      email,
+      password,
+      redirect: false,
+    });
+
+    if (result?.error) {
+      console.error('Login failed:', result.error);
+    } else {
+      localStorage.setItem(
+        `user_${email}`,
+        JSON.stringify({ email, password })
+      );
+      console.log('Login successful');
+      router.push('/');
+    }
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = await signIn('credentials', {
       email,
       password,
-      redirect: false, // 리다이렉트 방지
+      redirect: false,
     });
 
     if (result?.error) {
-      console.error('로그인 실패:', result.error);
+      console.error('Login failed:', result.error);
     } else {
-      // 로그인 성공 시 처리
-      console.log('로그인 성공');
+      localStorage.setItem(
+        `user_${email}`,
+        JSON.stringify({ email, password })
+      );
+      console.log('Login successful');
+      router.push('/');
     }
   };
 
-  // 클라이언트에서만 렌더링
   if (!isMounted) {
-    return null; // 로딩 중일 때 아무것도 렌더링하지 않음
+    return null;
   }
 
   return (
@@ -52,7 +102,7 @@ const LoginPage = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder='your-email@example.com'
-            className='w-full mb-2 p-2 border'
+            className='w-full mb-2 p-2 border rounded-sm'
             required
           />
           <input
@@ -60,25 +110,38 @@ const LoginPage = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder='비밀번호를 입력하세요'
-            className='w-full mb-4 p-2 border'
+            className='w-full mb-4 p-2 border rounded-sm'
             required
           />
-          <button type='submit' className='bg-blue-500 text-white p-2 w-full'>
+          <button
+            type='submit'
+            className='bg-green-500 text-white p-2 w-full rounded-sm'
+          >
             로그인
           </button>
         </form>
         <div className='mt-4'>
           <button
-            onClick={() => signIn('google')}
-            className='bg-red-500 text-white p-2 w-full mt-2'
+            onClick={() => signIn('google', { callbackUrl: '/' })}
+            className='border border-gray-300 bg-white text-gray-600 p-2 w-full mt-2 flex items-center justify-center rounded-sm'
           >
-            Sign in with Google
+            <img
+              src={googleLogo.src}
+              alt='Google Logo'
+              className='mr-2 h-5 w-5'
+            />
+            Google로 로그인
           </button>
           <button
-            onClick={() => signIn('github')}
-            className='bg-black text-white p-2 w-full mt-2'
+            onClick={() => signIn('github', { callbackUrl: '/' })}
+            className='border border-gray-300 bg-white text-gray-600 p-2 w-full mt-2 flex items-center justify-center rounded-sm'
           >
-            Sign in with GitHub
+            <img
+              src={githubLogo.src}
+              alt='GitHub Logo'
+              className='mr-2 h-5 w-5'
+            />
+            GitHub로 로그인
           </button>
         </div>
       </div>

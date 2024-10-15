@@ -17,9 +17,8 @@ export default function AddRecipe() {
     title: string,
     ingredients: string[],
     instructions: string[],
-    tags: string[] // 태그를 추가 파라미터로 받아옴
+    tags: string[] // tags are now passed to handleSubmit
   ) => {
-    // 이메일이 존재하는지 확인
     if (!session?.user?.email) {
       alert('사용자 이메일이 필요합니다.');
       return;
@@ -27,38 +26,34 @@ export default function AddRecipe() {
 
     const newid = uuidv4();
 
-    // 레시피 데이터 생성
     const newRecipe: Recipe = {
       id: newid,
       user: session.user.email,
       current: {
         id: newid,
         title,
-        ingredients, // 배열 형태로 저장
-        instructions, // 배열 형태로 저장
-        tags, // 태그 배열 추가
-        version: 1, // 첫 번째 버전
+        ingredients,
+        instructions,
+        tags, // Include tags when saving
+        version: 0,
         timestamp: new Date().toISOString(),
       },
-      versions: [], // 처음에는 버전 없음
+      versions: [],
     };
 
-    // 로컬 스토리지에 저장
     saveRecipe(newRecipe);
-
-    // 레시피 목록 페이지로 이동
     router.push('/recipe');
   };
 
   return (
-    <div>
-      <h1>새 레시피 추가</h1>
+    <div className='max-w-lg mx-auto bg-white shadow-md rounded-lg p-6 mt-10 '>
+      <h1 className='text-2xl font-bold text-center mb-4'>새 레시피 추가</h1>
       <RecipeForm
         initialTitle=''
         initialIngredients={[]}
         initialInstructions={[]}
+        initialTags={[]} // Provide an empty array for tags initially
         onSubmit={handleSubmit}
-        showTags={true} // 태그 입력 필드 표시
       />
     </div>
   );
