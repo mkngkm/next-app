@@ -13,11 +13,11 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <head>
-        <title>Todo App</title>
+        <title>Recipe</title>
       </head>
       <body>
         <header>
-          <h1>My Todo App</h1>
+          <h1>Recipe</h1>
         </header>
         <main>{children}</main>
       </body>

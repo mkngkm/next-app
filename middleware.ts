@@ -6,7 +6,11 @@ export async function middleware(req: any) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
   // 사용자가 로그인하지 않았다면 /login으로 리디렉션
-  if (!token && req.nextUrl.pathname !== '/login') {
+  if (
+    !token &&
+    req.nextUrl.pathname !== '/login' &&
+    req.nextUrl.pathname !== '/'
+  ) {
     return NextResponse.redirect(new URL('/login', req.url));
   }
 
